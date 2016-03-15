@@ -82,3 +82,9 @@ form input[type=text] {
 .spinner img {
     padding: 10px;
 }
+
+/*ADDED STUFF*/
+.dropdown {
+    margin-bottom: 8px;
+    text-align: center;
+}

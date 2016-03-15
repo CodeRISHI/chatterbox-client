@@ -1,6 +1,5 @@
 // YOUR CODE HERE:
-
-//create object 'app'
+  //create object 'app'
 var app = {
   init: function() {
     console.log('hello guys!');
@@ -15,8 +14,9 @@ var message = {
   roomname: 'lobby'
 };
 
+
 //AJAX call - POST
-app.send = function(data) {
+app.send = function() {
   $.ajax({
     type: 'POST',
     data: JSON.stringify(message),
@@ -26,6 +26,14 @@ app.send = function(data) {
     error: function(data) {
       console.error('chatterbox: failed to send message', data);
     }
+  });
+};
+
+//handleSubmit
+app.handleSubmit = function() {
+  console.log('TEST');
+  $('#send .submit').submit(function() {
+    app.send();
   });
 };
 
@@ -48,14 +56,21 @@ app.clearMessages = function() {
   $('#chats').children().remove();
 };
 
+//addFriend
+app.addFriend = function() {
+  $('.friendsList').append('<a href="#"> ' + message.username + '</a>');
+};
+
 //addMessage
 app.addMessage = function(newMessage) {
-  $('#chats').append('<span> ' + newMessage + '</span>');
+  $('#chats').append('<a href="#" class="username"> ' + JSON.stringify(newMessage.username) + '</a>');
+  $('#chats .username').click(function() {
+    app.addFriend();
+  });
 };
 
 //addroom
 app.addRoom = function(newRoom) {
   $('#roomSelect').append('<li> ' + newRoom + '</li>');
 };
-
 
