@@ -17,7 +17,7 @@ body {
 
 #main h1 {
     margin-top: 0;
-    font-size: 35px;
+    font-size: 70px;
     margin-bottom: 5px;
     padding: 5px;
 }
@@ -88,3 +88,9 @@ form input[type=text] {
     margin-bottom: 8px;
     text-align: center;
 }
+
+.submit {
+    margin: 8px 0px 8px 0px;
+}
+
+
