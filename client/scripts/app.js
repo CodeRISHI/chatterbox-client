@@ -2,7 +2,12 @@
   //create object 'app'
 var app = {
   init: function() {
-    console.log('hello guys!');
+    $('#chats .username').click(function() {
+      app.addFriend();
+    });
+    $('#send .submit').submit(function() {
+      app.handleSubmit();
+    });
   },
   url: 'https://api.parse.com/1/classes/messages',
   contentType: 'application/json'
@@ -13,7 +18,6 @@ var message = {
   text: 'It\'s good to be the king',
   roomname: 'lobby'
 };
-
 
 //AJAX call - POST
 app.send = function() {
@@ -26,14 +30,6 @@ app.send = function() {
     error: function(data) {
       console.error('chatterbox: failed to send message', data);
     }
-  });
-};
-
-//handleSubmit
-app.handleSubmit = function() {
-  console.log('TEST');
-  $('#send .submit').submit(function() {
-    app.send();
   });
 };
 
@@ -64,14 +60,18 @@ app.addFriend = function() {
 //addMessage
 app.addMessage = function(newMessage) {
   $('#chats').append('<a href="#" class="username"> ' + JSON.stringify(newMessage.username) + '</a>');
-  $('#chats .username').click(function() {
-    app.addFriend();
-  });
+};
+
+//handleSubmit
+app.handleSubmit = function() {
+  app.send();
+  console.log('TEST');
 };
 
 //addroom
 app.addRoom = function(newRoom) {
   $('#roomSelect').append('<li> ' + newRoom + '</li>');
 };
+
 
 
