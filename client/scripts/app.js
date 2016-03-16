@@ -17,7 +17,7 @@ var app = {
     app.$main.on('click', '.username', app.addFriend);
     app.$send.on('submit', app.handleSubmit);
     app.$roomSelect.on('change', app.addRoom);
-    setInterval(app.fetch, 3000);
+    setInterval(app.fetch, 5000);
   },
 };
 
@@ -48,9 +48,15 @@ app.fetch = function() {
     type: 'GET',
     contentType: app.contentType,
     success: function(data) {
-      // console.log(data);
-      app.addMessage(data.results);
-      console.log('chatterbox: message received!');
+      console.log(data);
+      var latestMessage = data.results[data.results.length - 1];
+      if (latestMessage.objectId !== app.messageID) {
+        app.messageID = latestMessage.objectId;
+        // console.log(data);
+        app.addMessage(data.results);
+        console.log('chatterbox: message received!');
+      }
+      //need a conditional to test if same message is trying to post
     },
     error: function(data) {
       console.error('chatterbox: failed to receive message', data);
