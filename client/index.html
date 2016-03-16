@@ -20,16 +20,28 @@
       <h1>chatterbox</h1>
       <!-- Your HTML goes here! -->
       <div id="send">
-        <div class="dropdown">
+        <!-- <div class="dropdown">
           <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="roomSelect">Chat Rooms
           <span class="caret"></span></button>
           <ul class="dropdown-menu">
             <li role="presentation"><a href="#">Lobby</a></li>
           </ul>
-        </div>
+        </div> -->
+        <form>
+          <input type="text" class="form-control" placeholder="Add a Chat Room..." id="addrooms">
+          <button type="submit" class="btn btn-danger addroom center-block">Add Room!</button>
+            <select class="target" id="roomSelect">
+              <option value="lobby" selected="selected">Lobby</option>
+            </select>
+          </input>
+        </form>
         <form id="form" action="#" method="POST">
           <input type="text" class="form-control" placeholder="say something..." id="message">
           <button type="submit" class="btn btn-success submit center-block">Submit</button>
+        </form>
+        <form id="form-user" action="#">
+          <input type="text" class="form-control" placeholder="what's your username?..." id="message">
+          <button type="submit" class="btn btn-info user center-block">Username</button>
         </form>
       </div>
       <div class="username"></div>

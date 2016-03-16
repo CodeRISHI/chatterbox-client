@@ -12,12 +12,16 @@ var app = {
     app.$message = $('#message'),
     app.$chats = $('#chats'),
     app.$roomSelect = $('#roomSelect'),
+    app.$addroom = $('.addroom'),
     app.$send = $('#send'),
+    app.$addfriend = $('.addfriend'),
     //listeners
     app.$main.on('click', '.username', app.addFriend);
     app.$send.on('submit', app.handleSubmit);
-    app.$roomSelect.on('change', app.addRoom);
-    setInterval(app.fetch, 5000);
+    app.$addroom.on('click', app.addRoom);
+    $(document).delegate('.username', 'click', app.addFriend);
+    //app.$roomSelect.on('change', app.addRoom);
+    setInterval(app.fetch, 1000);
   },
 };
 
@@ -71,10 +75,12 @@ app.clearMessages = function() {
 
 //addFriend
 app.addFriend = function(event) {
+  event.preventDefault();
+  console.log('addFriend called');
   var username = $(event.currentTarget).attr('data-username');
 
   //add to friends object
-  app.friends[username] = JSON.stringify(app.username);
+  app.friends[username] = app.username;
 };
 
 //addMessage
@@ -88,32 +94,48 @@ app.addMessage = function(data) {
     //This will create a new div for each chat
     var $chat = $('<div class="chat"></div>');
     var $username = $('<span class="username"></span>');
-    $chat.append($username.text(data[data.length - 1].username + ': ').attr('data-username', data[data.length - 1].username).attr('data-roomname', data.roomname));
-    if (app.friends[data[data.length - 1].username]) {
+    $chat.append($username.html('<a class="addfriend" href="#">' + data[0].username + '</a>' + ': ').attr('data-username', data[0].username).attr('data-roomname', data.roomname));
+    if (app.friends[data[0].username]) {
       $username.addClass('friend');
     }
 
     var $message = $('<br><span></span>');
-    $chat.append($message.text(data[data.length - 1].text));
+    $chat.append($message.text(data[0].text));
 
+    //bold text for friends
+    if (app.friends[app.username]) {
+      $chat.css('font-weight', 600);
+    } 
     //append to page
     app.$chats.append($chat);
   }
 };
 
 //handleSubmit
-app.handleSubmit = function() {
+app.handleSubmit = function(event) {
+  event.preventDefault();
   var message = {
     username: app.username,
-    text: app.$message.val(''),
+    text: app.$message.val(),
     roomname: app.$roomname || 'lobby'
   };
-  app.send(message);
+
+  if (app.$message.val().length === 0) {
+    return;
+  } else {
+    app.send(message);
+  }
 };
 
 //addroom
-app.addRoom = function(newRoom) {
-  var $room = $('<li role="presentation"/><a href="#"/>').val(newRoom).text(newRoom);
+app.addRoom = function(event, newRoom) {
+  event.preventDefault();
+
+  newRoom = $('#addrooms').val();
+  // var $room = $('<li><a href="#"></a></li>').val(newRoom).text(newRoom);
+  console.log(newRoom);
+
+  var $room = $('<option></option>').val(newRoom).text(newRoom);
 
   //add to roomSelect div
   app.$roomSelect.append($room);

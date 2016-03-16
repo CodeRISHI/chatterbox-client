@@ -90,9 +90,9 @@ form input[type=text] {
     right: auto;
     text-align: center;
     transform: translate(-50%, 0);
-}
+}   
 
-.submit {
+.submit, .addroom, .user {
     margin: 8px 0px 8px 0px;
 }
 
