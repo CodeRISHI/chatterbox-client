@@ -20,21 +20,23 @@
       <h1>chatterbox</h1>
       <!-- Your HTML goes here! -->
       <div id="send">
-      <div class="dropdown">
-        <button id="chatroom" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Chat Rooms
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="chatroom" id="roomSelect">
-        </ul>
-      </div>
-        <input type="text" class="form-control" placeholder="say something..." id="message">
-        <button type="submit" class="btn btn-success submit center-block">Submit</button>
+        <div class="dropdown">
+          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="roomSelect">Chat Rooms
+          <span class="caret"></span></button>
+          <ul class="dropdown-menu">
+            <li role="presentation"><a href="#">Lobby</a></li>
+          </ul>
+        </div>
+        <form id="form" action="#" method="POST">
+          <input type="text" class="form-control" placeholder="say something..." id="message">
+          <button type="submit" class="btn btn-success submit center-block">Submit</button>
+        </form>
       </div>
       <div class="username"></div>
-      <div class="friendsList"></div>
+      <!-- <div class="friendsList"></div> -->
     </div>
-    <div id="chats"></div>
+    <div id="chats">
+    </div>
   </body>
 </html>
 

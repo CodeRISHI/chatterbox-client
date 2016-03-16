@@ -1,30 +1,38 @@
-// YOUR CODE HERE:
-  //create object 'app'
+//create object 'app'
 var app = {
+  server: 'https://api.parse.com/1/classes/messages',
+  contentType: 'application/json',
+  username: 'anonymous',
+  text: 'Hi there!',
+  roomname: 'lobby',
+  friends: {}, //store friends
+  messageID: 0,
   init: function() {
-    $('#chats .username').click(function() {
-      app.addFriend();
-    });
-    $('#send .submit').submit(function() {
-      app.handleSubmit();
-    });
+    app.$main = $('#main'),
+    app.$message = $('#message'),
+    app.$chats = $('#chats'),
+    app.$roomSelect = $('#roomSelect'),
+    app.$send = $('#send'),
+    //listeners
+    app.$main.on('click', '.username', app.addFriend);
+    app.$send.on('submit', app.handleSubmit);
+    app.$roomSelect.on('change', app.addRoom);
+    setInterval(app.fetch, 3000);
   },
-  url: 'https://api.parse.com/1/classes/messages',
-  contentType: 'application/json'
-};
-
-var message = {
-  username: 'Mel Brooks',
-  text: 'It\'s good to be the king',
-  roomname: 'lobby'
 };
 
 //AJAX call - POST
-app.send = function() {
+app.send = function(data) {
+  //clear field
+  app.$message.val('');
   $.ajax({
+    url: app.server,
     type: 'POST',
-    data: JSON.stringify(message),
+    data: JSON.stringify(data),
+    contentType: app.contentType,
     success: function(data) {
+      //fetch data
+      app.fetch();
       console.log('chatterbox: message sent!');
     },
     error: function(data) {
@@ -36,9 +44,12 @@ app.send = function() {
 //AJAX call - GET
 app.fetch = function() {
   $.ajax({
+    url: app.server,
     type: 'GET',
-    data: JSON.stringify(message),
+    contentType: app.contentType,
     success: function(data) {
+      // console.log(data);
+      app.addMessage(data.results);
       console.log('chatterbox: message received!');
     },
     error: function(data) {
@@ -49,29 +60,63 @@ app.fetch = function() {
 
 //clearMessages
 app.clearMessages = function() {
-  $('#chats').children().remove();
+  app.$chats.children().remove();
 };
 
 //addFriend
-app.addFriend = function() {
-  $('.friendsList').append('<a href="#"> ' + message.username + '</a>');
+app.addFriend = function(event) {
+  var username = $(event.currentTarget).attr('data-username');
+
+  //add to friends object
+  app.friends[username] = JSON.stringify(app.username);
 };
 
 //addMessage
-app.addMessage = function(newMessage) {
-  $('#chats').append('<a href="#" class="username"> ' + JSON.stringify(newMessage.username) + '</a>');
+app.addMessage = function(data) {
+  if (!data.roomname) {
+    data.roomname = app.roomname;
+  }
+  console.log(data.roomname);
+
+  if (data.roomname === app.roomname) {
+    //This will create a new div for each chat
+    var $chat = $('<div class="chat"></div>');
+    var $username = $('<span class="username"></span>');
+    $chat.append($username.text(data[data.length - 1].username + ': ').attr('data-username', data[data.length - 1].username).attr('data-roomname', data.roomname));
+    if (app.friends[data[data.length - 1].username]) {
+      $username.addClass('friend');
+    }
+
+    var $message = $('<br><span></span>');
+    $chat.append($message.text(data[data.length - 1].text));
+
+    //append to page
+    app.$chats.append($chat);
+  }
 };
 
 //handleSubmit
 app.handleSubmit = function() {
-  app.send();
-  console.log('TEST');
+  var message = {
+    username: app.username,
+    text: app.$message.val(''),
+    roomname: app.$roomname || 'lobby'
+  };
+  app.send(message);
 };
 
 //addroom
 app.addRoom = function(newRoom) {
-  $('#roomSelect').append('<li> ' + newRoom + '</li>');
+  var $room = $('<li role="presentation"/><a href="#"/>').val(newRoom).text(newRoom);
+
+  //add to roomSelect div
+  app.$roomSelect.append($room);
 };
+
+// YOUR CODE HERE:
+$(document).ready(function() {
+  app.init();
+});
 
 
 
